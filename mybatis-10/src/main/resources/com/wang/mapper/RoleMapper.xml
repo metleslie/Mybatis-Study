@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wang.mapper.RoleMapper">
+    <cache
+            eviction="FIFO"
+            flushInterval="60000"
+            size="512"
+            readOnly="true"/>
+    <select id="getRoleList" resultType="role">
+    select * from smbms.smbms_role
+    </select>
+
+    <insert id="add" parameterType="role">
+        insert into smbms.smbms_role (id,roleCode,roleName)
+        values
+        (#{id},#{roleCode},#{roleName})
+    </insert>
+
+    <delete id="deleteRoleById" parameterType="int">
+        delete from smbms.smbms_role
+        <where>
+            id=#{id}
+        </where>
+    </delete>
+
+    <update id="modify" parameterType="role">
+        update smbms.smbms_role
+        <set>
+            <if test="roleCode !=null">
+                roleCode=#{roleCode},
+            </if>
+            <if test="roleName !=null">
+                roleName=#{roleName},
+            </if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+
+    <select id="getRoleById" parameterType="int" resultType="role">
+        select *from smbms.smbms_role
+        <where>
+            id=#{id}
+        </where>
+    </select>
+
+    <select id="roleCodeIsExist" resultType="int">
+        select count(*)from smbms.smbms_role
+        <where>
+            roleCode=#{roleCode}
+        </where>
+    </select>
+</mapper>

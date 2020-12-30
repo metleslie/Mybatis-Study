@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wang.mapper.ProviderMapper">
+    <cache
+            eviction="FIFO"
+            flushInterval="60000"
+            size="512"
+            readOnly="true"/>
+    <insert id="add" parameterType="provider">
+        insert into smbms.smbms_provider
+        (id,proCode,proName,proDesc)
+        values
+        (#{id},#{proCode},#{proName},#{proDesc})
+    </insert>
+
+    <select id="getProviderList" parameterType="String" resultType="provider">
+        select * from smbms.smbms_provider
+        <where>
+            <if test="proName !=null">
+                and proName like concat('%',#{proName},'%')
+            </if>
+            <if test="proCode !=null">
+                and proCode like concat ('%',#{proCode},'%')
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteProviderById" parameterType="int">
+        delete from smbms.smbms_provider
+        <where>
+            id=#{id}
+        </where>
+    </delete>
+
+    <select id="getProviderById" parameterType="String" resultType="provider">
+        select * from smbms.smbms_provider
+        <where>
+            id=#{id}
+        </where>
+    </select>
+
+    <update id="modify" parameterType="provider">
+        update smbms.smbms_provider
+        <set>
+            <if test="proCode !=null">
+                proCode=#{proCode},
+            </if>
+            <if test="proName !=null">
+                proName=#{proName},
+            </if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+</mapper>

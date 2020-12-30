@@ -1,0 +1,3 @@
+com\wang\entity\User.class
+com\wang\mapper\UserMapper.class
+com\wang\untils\MybatisUntil.class

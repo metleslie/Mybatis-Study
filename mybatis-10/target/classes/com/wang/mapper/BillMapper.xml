@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wang.mapper.BillMapper">
+    <cache
+            eviction="FIFO"
+            flushInterval="60000"
+            size="512"
+            readOnly="true"/>
+    <!--根据供应商Id查询订单数量-->
+    <select id="getBillCountByProviderId" resultType="int">
+        select count(*)from smbms.smbms_bill
+        where providerId=#{providerId}
+    </select>
+
+    <!--增加订单-->
+    <insert id="add" parameterType="bill">
+        insert into smbms.smbms_bill (id,billCode,productName,productDesc,productUnit,productCount
+        ,totalPrice,isPayment,providerId,createdBy,creationDate) values
+         (#{id},#{billCode},#{productName},#{productDesc},#{productUnit},#{productCount},
+         #{totalPrice},#{isPayment},#{providerId},#{createdBy},#{creationDate})
+    </insert>
+
+    <!--通过条件查询，查询供货商数量,模糊查询-->
+    <select id="getBillList" resultType="bill">
+        select * from smbms.smbms_bill
+        <where>
+            <if test="productName !=null">
+                and productName like concat ('%',#{productName},'%')
+            </if>
+            <if test="providerId !=null">
+                and providerId like concat('%',#{providerId},'%')
+            </if>
+            <if test="isPayment !=null">
+                and isPayment like concat ('%',#{isPayment},'%')
+            </if>
+
+        </where>
+        limit #{startindex},#{pageSize}
+    </select>
+
+    <!--通过delId删除Bill-->
+    <delete id="deleteBillById" parameterType="int">
+        delete from smbms.smbms_bill
+        <where>
+            id=#{id}
+        </where>
+    </delete>
+
+    <!--通过billId获取Bill-->
+    <select id="getBillById" resultType="bill">
+        select * from smbms.smbms_bill
+        <where>
+            id=#{id}
+        </where>
+    </select>
+
+    <!--修改订单信息-->
+    <update id="modify" parameterType="bill">
+        update smbms.smbms_bill
+        <set>
+            <if test="productName !=null">
+                productName=#{productName},
+            </if>
+            <if test="productDesc !=null">
+                productDesc=#{productDesc},
+            </if>
+            <if test="productCount !=null">
+                productCount=#{productCount},
+            </if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+</mapper>
